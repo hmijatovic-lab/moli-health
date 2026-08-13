@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MOLI — Medical Observation through Linked Insights</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#E7E2D6; --ink:#2A2822; --ink-soft:#5C5748; --line:#C9C1AC; --card:#F3F0E7;
+    --c-symptom:#3B6FA0; --c-diagnose:#4C7A52; --c-bild:#B8862F; --c-op:#7A5C9E; --c-histo:#AE3B34; --c-genetik:#C06A28;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--paper); color:var(--ink); font-family:'IBM Plex Sans', sans-serif; -webkit-font-smoothing:antialiased; line-height:1.6;}
+  .wrap{max-width:760px; margin:0 auto; padding:0 24px;}
+
+  nav{border-bottom:1px solid var(--line); padding:18px 0;}
+  nav .wrap{display:flex; align-items:center; justify-content:space-between;}
+  .brand{font-family:'Fraunces', serif; font-weight:600; font-size:17px;}
+  .brand .dim{color:var(--ink-soft); font-weight:400; font-style:italic;}
+  nav a{font-family:'IBM Plex Mono', monospace; font-size:11.5px; color:var(--ink-soft); text-decoration:none; letter-spacing:.04em;}
+
+  .mosaic-strip{display:flex; gap:3px; height:6px;}
+  .mosaic-strip div{flex:1;}
+
+  header.hero{padding:70px 0 40px; border-bottom:1px solid var(--line);}
+  .eyebrow{font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:18px;}
+  h1{font-family:'Fraunces', serif; font-weight:600; font-size:clamp(2.6rem,7vw,3.8rem); line-height:1; margin:0 0 18px; letter-spacing:-.01em;}
+  h1 em{font-style:italic; font-weight:400; color:var(--ink-soft);}
+  .lede{font-size:17px; color:var(--ink-soft); max-width:58ch; margin:0 0 8px;}
+  .status-badge{display:inline-flex; align-items:center; gap:8px; font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--ink-soft); border:1px solid var(--line); border-radius:999px; padding:6px 14px; margin-top:22px;}
+  .status-badge .dot{width:6px; height:6px; border-radius:50%; background:#B8862F;}
+
+  section{padding:52px 0; border-bottom:1px solid var(--line);}
+  section:last-of-type{border-bottom:none;}
+  .section-label{font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:14px;}
+  h2{font-family:'Fraunces', serif; font-weight:600; font-size:28px; margin:0 0 18px; letter-spacing:-.01em;}
+  p{font-size:15px; color:var(--ink-soft); margin:0 0 14px; max-width:64ch;}
+  p strong{color:var(--ink); font-weight:600;}
+
+  .arch-grid{display:grid; grid-template-columns:1fr; gap:10px; margin-top:24px;}
+  .arch-item{display:flex; gap:14px; padding:14px 16px; background:var(--card); border:1px solid var(--line); border-radius:10px;}
+  .arch-item .idx{font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--ink-soft); flex:none; padding-top:2px;}
+  .arch-item .body b{display:block; font-family:'Fraunces', serif; font-weight:600; font-size:14.5px; margin-bottom:2px;}
+  .arch-item .body span{font-size:13px; color:var(--ink-soft);}
+
+  .q-list{counter-reset:q; margin-top:20px;}
+  .q-item{position:relative; padding:16px 0 16px 44px; border-top:1px dashed var(--line);}
+  .q-item:first-child{border-top:none;}
+  .q-item::before{
+    counter-increment:q; content:counter(q);
+    position:absolute; left:0; top:16px;
+    font-family:'Fraunces', serif; font-weight:600; font-size:17px; color:var(--ink-soft);
+    width:28px; height:28px; border:1px solid var(--line); border-radius:50%;
+    display:flex; align-items:center; justify-content:center; background:var(--card);
+  }
+  .q-item p{margin:0; color:var(--ink); font-size:14.5px;}
+
+  .standards-row{display:flex; flex-wrap:wrap; gap:8px; margin-top:18px;}
+  .std-chip{font-family:'IBM Plex Mono', monospace; font-size:11.5px; padding:7px 13px; border:1px solid var(--line); border-radius:999px; background:var(--card);}
+
+  .about-card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:22px 24px; margin-top:20px;}
+  .about-card .name{font-family:'Fraunces', serif; font-weight:600; font-size:16px; margin-bottom:2px;}
+  .about-card .role{font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--ink-soft); margin-bottom:12px;}
+
+  .cta{padding:60px 0 80px;}
+  .cta-box{background:var(--ink); color:var(--paper); border-radius:16px; padding:36px 30px; text-align:left;}
+  .cta-box h2{color:var(--paper); margin-bottom:10px;}
+  .cta-box p{color:#C9C4B4; margin-bottom:20px;}
+  .cta-box a.btn{
+    display:inline-block; font-family:'IBM Plex Mono', monospace; font-size:12.5px;
+    background:var(--paper); color:var(--ink); padding:11px 20px; border-radius:999px; text-decoration:none;
+  }
+
+  footer{padding:26px 0 50px; font-size:11.5px; color:var(--ink-soft);}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand">🧩 Mosaik <span class="dim">· MOLI</span></div>
+    <a href="mailto:contact@moli-health.org">contact@moli-health.org</a>
+  </div>
+</nav>
+<div class="mosaic-strip">
+  <div style="background:var(--c-symptom)"></div><div style="background:var(--c-diagnose)"></div>
+  <div style="background:var(--c-bild)"></div><div style="background:var(--c-op)"></div>
+  <div style="background:var(--c-histo)"></div><div style="background:var(--c-genetik)"></div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Patient-led knowledge system · early stage</div>
+    <h1>MOLI</h1>
+    <p class="lede"><strong>Medical Observation through Linked Insights.</strong> A structured, longitudinal, computable model for complex and rare medical histories — built from one unusually complex patient case, designed for many.</p>
+    <div class="status-badge"><span class="dot"></span>Concept phase — seeking scientific &amp; conceptual sparring partners</div>
+  </div>
+</header>
+
+<section id="problem">
+  <div class="wrap">
+    <div class="section-label">The problem</div>
+    <h2>Fragmented by design, not by accident</h2>
+    <p>Complex, multisystem, rare-variant patient histories generate information across many specialties, institutions and document formats. Individual findings are repeatedly assessed in isolation, while their temporal, anatomical and potentially biological relationships remain difficult to examine — even though the underlying data already exists.</p>
+    <p>MOLI began with a concrete case: pathogenic or clinically relevant variants in <strong>SDHA</strong> and <strong>FH</strong>, combined with a long history of multifocal bone and organ lesions, endocrine abnormalities, neurological symptoms, imaging findings, pathology, interventions and shifting diagnostic interpretations. The goal is to transform such fragmented records into something inspectable — without collapsing their complexity or uncertainty.</p>
+  </div>
+</section>
+
+<section id="architecture">
+  <div class="wrap">
+    <div class="section-label">Proposed architecture</div>
+    <h2>A knowledge graph, not a chronology</h2>
+    <p>Every clinical element receives a stable identity and remains traceable to its original source. The model connects:</p>
+    <div class="arch-grid">
+      <div class="arch-item"><span class="idx">01</span><div class="body"><b>Genetic variants &amp; pathways</b><span>Variant-level findings linked to associated biological mechanisms.</span></div></div>
+      <div class="arch-item"><span class="idx">02</span><div class="body"><b>Phenotypic findings &amp; symptoms</b><span>Patient-observed and clinically documented, kept distinguishable.</span></div></div>
+      <div class="arch-item"><span class="idx">03</span><div class="body"><b>Anatomy: region, structure, laterality</b><span>Hierarchical — e.g. pelvis → ilium → right — not flat tags.</span></div></div>
+      <div class="arch-item"><span class="idx">04</span><div class="body"><b>Imaging &amp; pathology observations</b><span>Linked to the structure and timepoint they describe.</span></div></div>
+      <div class="arch-item"><span class="idx">05</span><div class="body"><b>Diagnoses &amp; diagnostic uncertainty</b><span>Confidence is a first-class field, not an afterthought.</span></div></div>
+      <div class="arch-item"><span class="idx">06</span><div class="body"><b>Treatments, procedures &amp; observed response</b><span>What was done, and what changed afterward.</span></div></div>
+      <div class="arch-item"><span class="idx">07</span><div class="body"><b>Temporal development &amp; clinical events</b><span>The case as a timeline, not a snapshot.</span></div></div>
+      <div class="arch-item"><span class="idx">08</span><div class="body"><b>Source documents &amp; provenance</b><span>Every element traceable back to the letter or report it came from.</span></div></div>
+      <div class="arch-item"><span class="idx">09</span><div class="body"><b>Hypothesised relationships</b><span>Kept clearly, structurally separate from verified clinical fact.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="standards">
+  <div class="wrap">
+    <div class="section-label">Interoperability</div>
+    <h2>Compatible, not reinvented</h2>
+    <p>We are examining how MOLI could align with established frameworks while retaining information conventional records often lose — particularly chronology, uncertainty, treatment response and patient-observed relationships.</p>
+    <div class="standards-row">
+      <span class="std-chip">Human Phenotype Ontology</span>
+      <span class="std-chip">MONDO</span>
+      <span class="std-chip">GA4GH Phenopackets</span>
+      <span class="std-chip">FHIR</span>
+      <span class="std-chip">Standard biomedical terminologies</span>
+    </div>
+  </div>
+</section>
+
+<section id="questions">
+  <div class="wrap">
+    <div class="section-label">Open questions</div>
+    <h2>What we'd value a second opinion on</h2>
+    <div class="q-list">
+      <div class="q-item"><p>Which entities and relationships are essential for a scientifically meaningful longitudinal rare-disease graph?</p></div>
+      <div class="q-item"><p>How should verified findings, clinical interpretations and patient-generated hypotheses be distinguished without discarding potentially relevant signals?</p></div>
+      <div class="q-item"><p>How can such a system remain interoperable with established standards while preserving the complexity of an individual patient's history?</p></div>
+      <div class="q-item"><p>At what point could an individual patient model become useful for cohort comparison or research hypothesis generation?</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap">
+    <div class="section-label">About</div>
+    <h2>Founder &amp; patient lead</h2>
+    <p>MOLI began with one unusually complex patient history. Its larger purpose is to help make other medically "invisible" patterns examinable, shareable and scientifically useful.</p>
+    <div class="about-card">
+      <div class="name">Huanita Mijatovic-Pflanz</div>
+      <div class="role">Founder &amp; Patient Lead, MOLI</div>
+      <p style="margin:0;">Not asking for formal supervision, medical advice, or a substantial time commitment — an occasional scientific and conceptual sparring partner during this early phase.</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap">
+    <div class="cta-box">
+      <h2>Get in touch</h2>
+      <p>If this concept is relevant to your work, we'd be glad to send a concise visual overview and arrange an informal 20–30 minute conversation.</p>
+      <a class="btn" href="mailto:contact@moli-health.org">contact@moli-health.org</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">MOLI — a developing, patient-led knowledge system for complex and rare medical histories. Concept phase.</div>
+</footer>
+
+</body>
+</html>
